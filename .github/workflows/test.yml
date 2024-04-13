@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - release/**
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: testing
+          MYSQL_USER: root
+          MYSQL_PASSWORD: testing
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: fileinfo, dom, curl, libxml, mbstring, bcmath
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: PHPStan
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G
+
+      - name: Pint
+        run: ./vendor/bin/pint --test
+
+      - name: Copy .env file
+        run: cp .env.ci .env
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: Seed database
+        run: php artisan db:seed --force
+
+      - name: Rollback the database
+        run: php artisan migrate:rollback --force
+
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        run: ./vendor/bin/pest --bail
