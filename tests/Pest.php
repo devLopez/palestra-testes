@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,8 +17,8 @@ use Tests\TestCase;
 */
 
 uses(
-    Tests\TestCase::class,
-     Illuminate\Foundation\Testing\RefreshDatabase::class,
+    TestCase::class,
+    RefreshDatabase::class,
 )->in('Feature', 'Unit', 'Services');
 
 /*
