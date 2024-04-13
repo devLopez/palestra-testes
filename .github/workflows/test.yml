@@ -38,6 +38,12 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Run NPM production
+        run: npm run build
+
       - name: PHPStan
         run: ./vendor/bin/phpstan analyse --memory-limit=2G
 
