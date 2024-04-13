@@ -3,9 +3,8 @@ name: CI
 on:
   pull_request:
     branches:
-      - main
+      - master
       - develop
-      - release/**
 
   workflow_dispatch:
 
