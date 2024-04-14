@@ -7,6 +7,16 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
+test('user should be redirected if email is already verifyed', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $this->actingAs($user)
+        ->get('/verify-email')
+        ->assertRedirect(route('dashboard', absolute: false));
+});
+
 test('email verification screen can be rendered', function () {
     $user = User::factory()->create([
         'email_verified_at' => null,
