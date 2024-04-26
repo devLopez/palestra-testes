@@ -19,7 +19,7 @@ Lembre-se de verificar se o arquivo `.env` ou `.env.testing` está configurado c
 #### Cypress
 Já para os testes **_E2E_** com o **Cypress**, basta rodar o comando:
 ```bash
-npx cypress open
+npm install && npx cypress open
 ```
 Ao abrir o Cypress, clique em **_E2E Testing_** e selecione o navegador de sua preferência.
 Após a abertura do painel do cypress, no menu à esquerda, você verá o link para a página **Specs**
